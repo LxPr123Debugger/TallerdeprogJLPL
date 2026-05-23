@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Cambiamos "localhost" por "127.0.0.1" para forzar la conexión por TCP/IP
 $host = getenv('DB_HOST') ?: "127.0.0.1";
 $user = getenv('DB_USER') ?: "root";
