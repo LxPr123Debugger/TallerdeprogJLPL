@@ -2,15 +2,30 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-// Cambiamos "localhost" por "127.0.0.1" para forzar la conexión por TCP/IP
-$host = getenv('DB_HOST') ?: "127.0.0.1";
-$user = getenv('DB_USER') ?: "root";
-$pass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : "";
-$db   = getenv('DB_NAME') ?: "sistema_usuarios";
 
-$conn = new mysqli($host, $user, $pass, $db);
+// Conexión usando SQLite (PDO) para evitar depender de servidores externos en Codespaces
+try {
+    $conn = new PDO("sqlite:" . __DIR__ . "/sistema_usuarios.db");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-if ($conn->connect_error) {
-    die("Error crítico: No se pudo conectar a la base de datos.");
+    // Crear la tabla automáticamente si no existe
+    $conn->exec("CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        email TEXT NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )");
+
+    // Insertar el usuario administrador por defecto si la tabla está vacía
+    $stmt = $conn->query("SELECT COUNT(*) FROM usuarios WHERE usuario = 'admin'");
+    if ($stmt->fetchColumn() == 0) {
+        $admin_pass = password_hash('admin123', PASSWORD_DEFAULT);
+        $insert = $conn->prepare("INSERT INTO usuarios (usuario, password, email) VALUES ('admin', ?, 'admin@correo.com')");
+        $insert->execute([$admin_pass]);
+    }
+
+} catch (PDOException $e) {
+    die("Error crítico de conexión: " . $e->getMessage());
 }
 ?>
