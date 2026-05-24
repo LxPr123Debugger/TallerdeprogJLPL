@@ -12,7 +12,7 @@ if (!isset($_SESSION['usuario'])) {
 
 $msg = "";
 
-// ---- LÓGICA DE CREACIÓN INTERNA CON MISMAS VALIDACIONES ----
+// ---- LÓGICA DE CREACIÓN DESDE EL PANEL CON VALIDACIONES ----
 if (isset($_POST['crear'])) {
     $nuevo_user = trim($_POST['nuevo_usuario']);
     $nuevo_email = trim($_POST['nuevo_email']);
@@ -20,22 +20,22 @@ if (isset($_POST['crear'])) {
 
     // 1. Validar usuario alfanumérico
     if (!preg_match('/^[a-zA-Z0-9]+$/', $nuevo_user)) {
-        registrar_log("ADMIN TRIGGER FAIL ➜ usuario no alfanumérico", 'fail');
-        $msg = "<p class='error'>Error: El usuario debe ser solo letras y números.</p>";
+        registrar_log("ADMIN TRIGGER FAIL ➜ usuario no alfanumérico: '$nuevo_user'", 'fail');
+        $msg = "<p class='error'>Error: El usuario debe contener únicamente letras y números.</p>";
     }
     // 2. Validar correo electrónico
-    define('FILTER_VALIDATE_EMAIL', 274);
-    elseif (!filter_var($nuevo_email, FILTER_VALIDATE_EMAIL)) {
-        registrar_log("ADMIN TRIGGER FAIL ➜ correo inválido", 'fail');
-        $msg = "<p class='error'>Error: Formato de correo electrónico inválido.</p>";
+    if (!filter_var($nuevo_email, FILTER_VALIDATE_EMAIL) && empty($msg)) {
+        registrar_log("ADMIN TRIGGER FAIL ➜ formato de correo inválido: '$nuevo_email'", 'fail');
+        $msg = "<p class='error'>Error: Formato de correo electrónico inválido (Falta '@' o dominio).</p>";
     }
-    // 3. Validar contraseña: mínimo 6 caracteres y 1 número
-    elseif (strlen($nuevo_pass) < 6 || !preg_match('/[0-9]/', $nuevo_pass)) {
-        registrar_log("ADMIN TRIGGER FAIL ➜ contraseña insegura", 'fail');
-        $msg = "<p class='error'>Error: La contraseña requiere mínimo 6 caracteres y un número.</p>";
+    // 3. Validar contraseña de administración: mínimo 6 caracteres y 1 número
+    if ((strlen($nuevo_pass) < 6 || !preg_match('/[0-9]/', $nuevo_pass)) && empty($msg)) {
+        registrar_log("ADMIN TRIGGER FAIL ➜ contraseña propuesta insegura", 'fail');
+        $msg = "<p class='error'>Error: La contraseña requiere obligatoriamente mínimo 6 caracteres y un número.</p>";
     }
-    // Si pasa el filtro, ejecuta el bloque controlado
-    else {
+
+    // Ejecución segura controlada si no hay advertencias previas
+    if (empty($msg)) {
         try {
             $pass_hash = password_hash($nuevo_pass, PASSWORD_DEFAULT);
             $stmt = $conn->prepare("INSERT INTO usuarios (usuario, password, email) VALUES (?, ?, ?)");
@@ -43,17 +43,18 @@ if (isset($_POST['crear'])) {
             registrar_log("TRIGGER ➜ USER_CREATED por admin: '$nuevo_user'", 'success');
             $msg = "<p class='msg-success'>Usuario creado con éxito.</p>";
         } catch (Exception $e) {
-            registrar_log("ADMIN TRIGGER FAIL ➜ usuario duplicado", 'fail');
-            $msg = "<p class='error'>Error: El nombre de usuario o correo ya existe.</p>";
+            registrar_log("ADMIN TRIGGER FAIL ➜ colisión por duplicado en BD", 'fail');
+            $msg = "<p class='error'>Error: El nombre de usuario o correo ingresado ya existe.</p>";
         }
     }
 }
 
+// ---- LÓGICA DE ELIMINACIÓN COMPLETA Y DETECCIÓN DE URL ----
 if (isset($_GET['eliminar'])) {
     $id = $_GET['eliminar'];
     $stmt = $conn->prepare("DELETE FROM usuarios WHERE id = ?");
     $stmt->execute([$id]);
-    registrar_log("TRIGGER ➜ USER_DELETED - ID: #$id", 'fail');
+    registrar_log("TRIGGER ➜ USER_DELETED - Registro ID: #$id removido", 'fail');
     header("Location: dashboard.php");
     exit();
 }
@@ -127,11 +128,11 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
 
 <script>
 function confirmarEliminar(event, id) {
-    event.preventDefault(); 
+    event.preventDefault(); // Detiene el comportamiento por defecto de la almohadilla '#'
     
     Swal.fire({
         title: '¿ELIMINAR REGISTRO?',
-        text: "Esta acción destruirá el ID #" + id + " en la base de datos.",
+        text: "Esta acción destruirá el ID #" + id + " en la base de datos de manera definitiva.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ff003c',
@@ -145,6 +146,7 @@ function confirmarEliminar(event, id) {
         }
     }).then((result) => {
         if (result.isConfirmed) {
+            // Se ejecuta la redirección explícita inyectando la variable por método GET
             window.location.href = 'dashboard.php?eliminar=' + id;
         }
     });

@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // ---- LÓGICA DE REGISTRO CON NUEVAS VALIDACIONES ----
+    // ---- LÓGICA DE REGISTRO CON VALIDACIONES EXIGIDAS ----
     if (isset($_POST['action_register'])) {
         $active_view = "register"; 
         $usuario = trim($_POST['reg_usuario']);
@@ -41,22 +41,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // 1. Validar que el usuario sea estrictamente alfanumérico
         if (!preg_match('/^[a-zA-Z0-9]+$/', $usuario)) {
-            registrar_log("REGISTER FAIL ➜ usuario no alfanumérico", 'fail');
+            registrar_log("REGISTER FAIL ➜ usuario no alfanumérico: '$usuario'", 'fail');
             $error = "El usuario debe contener solo letras y números (sin espacios ni caracteres especiales).";
         }
         // 2. Validar correo electrónico estructuralmente correcto con su @
-        define('FILTER_VALIDATE_EMAIL', 274); // Fallback robusto para entornos PHP viejos
-        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            registrar_log("REGISTER FAIL ➜ correo inválido", 'fail');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) && empty($error)) {
+            registrar_log("REGISTER FAIL ➜ correo inválido: '$email'", 'fail');
             $error = "Por favor, introduce un correo electrónico válido (debe contener '@' y un dominio).";
         }
         // 3. Validar contraseña: mínimo 6 caracteres y al menos un número
-        elseif (strlen($password) < 6 || !preg_match('/[0-9]/', $password)) {
+        if ((strlen($password) < 6 || !preg_match('/[0-9]/', $password)) && empty($error)) {
             registrar_log("REGISTER FAIL ➜ contraseña insegura", 'fail');
             $error = "La contraseña debe tener mínimo 6 caracteres y contener al menos un número.";
         } 
-        // Si todo pasa las pruebas, intentamos meterlo a la BD dentro del bloque Try-Catch
-        else {
+        
+        // Bloque seguro de inserción si no se levantaron banderas de error
+        if (empty($error)) {
             try {
                 $pass_hash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $conn->prepare("INSERT INTO usuarios (usuario, email, password) VALUES (?, ?, ?)");
@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $success = "Cuenta creada con éxito. ¡Ya puedes iniciar sesión!";
                 $active_view = "login"; 
             } catch (Exception $e) {
-                registrar_log("REGISTER FAIL ➜ conflicto de duplicados", 'fail');
+                registrar_log("REGISTER FAIL ➜ conflicto de duplicados en BD", 'fail');
                 $error = "Error crítico: El nombre de usuario o el correo electrónico ya se encuentran registrados.";
             }
         }
@@ -110,8 +110,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-block">
                 <form method="POST" action="">
                     <input type="hidden" name="action_register" value="1">
-                    <input type="text" name="reg_usuario" placeholder="Usuario (Letras y números)" required>
-                    <input type="email" name="reg_email" placeholder="Correo (@dominio.com)" required>
+                    <input type="text" name="reg_usuario" placeholder="Usuario (Solo letras y números)" required>
+                    <input type="email" name="reg_email" placeholder="Correo electrónico (@)" required>
                     <input type="password" name="reg_password" placeholder="Mínimo 6 caracteres y 1 número" required>
                     <button type="submit">CREAR CUENTA</button>
                 </form>
