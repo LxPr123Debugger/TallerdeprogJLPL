@@ -7,6 +7,7 @@ $success = "";
 $active_view = "login"; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // ---- LÓGICA DE INICIO DE SESIÓN ----
     if (isset($_POST['action_login'])) {
         $usuario = $_POST['usuario'];
         $password = $_POST['password'];
@@ -31,27 +32,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    // ---- LÓGICA DE REGISTRO CON NUEVAS VALIDACIONES ----
     if (isset($_POST['action_register'])) {
         $active_view = "register"; 
-        $usuario = $_POST['reg_usuario'];
-        $email = $_POST['reg_email'];
+        $usuario = trim($_POST['reg_usuario']);
+        $email = trim($_POST['reg_email']);
         $password = $_POST['reg_password'];
 
-        if (strlen($password) < 6) {
-            registrar_log("REGISTER FAIL ➜ contraseña muy corta", 'fail');
-            $error = "La contraseña debe tener mínimo 6 caracteres.";
-        } else {
+        // 1. Validar que el usuario sea estrictamente alfanumérico
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $usuario)) {
+            registrar_log("REGISTER FAIL ➜ usuario no alfanumérico", 'fail');
+            $error = "El usuario debe contener solo letras y números (sin espacios ni caracteres especiales).";
+        }
+        // 2. Validar correo electrónico estructuralmente correcto con su @
+        define('FILTER_VALIDATE_EMAIL', 274); // Fallback robusto para entornos PHP viejos
+        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            registrar_log("REGISTER FAIL ➜ correo inválido", 'fail');
+            $error = "Por favor, introduce un correo electrónico válido (debe contener '@' y un dominio).";
+        }
+        // 3. Validar contraseña: mínimo 6 caracteres y al menos un número
+        elseif (strlen($password) < 6 || !preg_match('/[0-9]/', $password)) {
+            registrar_log("REGISTER FAIL ➜ contraseña insegura", 'fail');
+            $error = "La contraseña debe tener mínimo 6 caracteres y contener al menos un número.";
+        } 
+        // Si todo pasa las pruebas, intentamos meterlo a la BD dentro del bloque Try-Catch
+        else {
             try {
                 $pass_hash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $conn->prepare("INSERT INTO usuarios (usuario, email, password) VALUES (?, ?, ?)");
                 $stmt->execute([$usuario, $email, $pass_hash]);
                 
                 registrar_log("REGISTER OK ➜ usuario: '$usuario' | email: '$email'", 'success');
-                $success = "Cuenta creada. ¡Inicia sesión!";
+                $success = "Cuenta creada con éxito. ¡Ya puedes iniciar sesión!";
                 $active_view = "login"; 
             } catch (Exception $e) {
-                registrar_log("REGISTER FAIL ➜ campos duplicados", 'fail');
-                $error = "El usuario o correo ya existe.";
+                registrar_log("REGISTER FAIL ➜ conflicto de duplicados", 'fail');
+                $error = "Error crítico: El nombre de usuario o el correo electrónico ya se encuentran registrados.";
             }
         }
     }
@@ -94,9 +110,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-block">
                 <form method="POST" action="">
                     <input type="hidden" name="action_register" value="1">
-                    <input type="text" name="reg_usuario" placeholder="Nombre de Usuario" required>
-                    <input type="email" name="reg_email" placeholder="Correo Electrónico" required>
-                    <input type="password" name="reg_password" placeholder="Mínimo 6 caracteres" required>
+                    <input type="text" name="reg_usuario" placeholder="Usuario (Letras y números)" required>
+                    <input type="email" name="reg_email" placeholder="Correo (@dominio.com)" required>
+                    <input type="password" name="reg_password" placeholder="Mínimo 6 caracteres y 1 número" required>
                     <button type="submit">CREAR CUENTA</button>
                 </form>
             </div>

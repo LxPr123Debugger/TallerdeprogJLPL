@@ -12,18 +12,40 @@ if (!isset($_SESSION['usuario'])) {
 
 $msg = "";
 
+// ---- LÓGICA DE CREACIÓN INTERNA CON MISMAS VALIDACIONES ----
 if (isset($_POST['crear'])) {
-    $nuevo_user = $_POST['nuevo_usuario'];
-    $nuevo_pass = password_hash($_POST['nuevo_password'], PASSWORD_DEFAULT);
-    $nuevo_email = $_POST['nuevo_email'];
+    $nuevo_user = trim($_POST['nuevo_usuario']);
+    $nuevo_email = trim($_POST['nuevo_email']);
+    $nuevo_pass = $_POST['nuevo_password'];
 
-    try {
-        $stmt = $conn->prepare("INSERT INTO usuarios (usuario, password, email) VALUES (?, ?, ?)");
-        $stmt->execute([$nuevo_user, $nuevo_pass, $nuevo_email]);
-        registrar_log("TRIGGER ➜ USER_CREATED por admin: '$nuevo_user'", 'success');
-        $msg = "<p class='msg-success'>Usuario creado con éxito.</p>";
-    } catch (Exception $e) {
-        $msg = "<p class='error'>Error: El usuario ya existe.</p>";
+    // 1. Validar usuario alfanumérico
+    if (!preg_match('/^[a-zA-Z0-9]+$/', $nuevo_user)) {
+        registrar_log("ADMIN TRIGGER FAIL ➜ usuario no alfanumérico", 'fail');
+        $msg = "<p class='error'>Error: El usuario debe ser solo letras y números.</p>";
+    }
+    // 2. Validar correo electrónico
+    define('FILTER_VALIDATE_EMAIL', 274);
+    elseif (!filter_var($nuevo_email, FILTER_VALIDATE_EMAIL)) {
+        registrar_log("ADMIN TRIGGER FAIL ➜ correo inválido", 'fail');
+        $msg = "<p class='error'>Error: Formato de correo electrónico inválido.</p>";
+    }
+    // 3. Validar contraseña: mínimo 6 caracteres y 1 número
+    elseif (strlen($nuevo_pass) < 6 || !preg_match('/[0-9]/', $nuevo_pass)) {
+        registrar_log("ADMIN TRIGGER FAIL ➜ contraseña insegura", 'fail');
+        $msg = "<p class='error'>Error: La contraseña requiere mínimo 6 caracteres y un número.</p>";
+    }
+    // Si pasa el filtro, ejecuta el bloque controlado
+    else {
+        try {
+            $pass_hash = password_hash($nuevo_pass, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("INSERT INTO usuarios (usuario, password, email) VALUES (?, ?, ?)");
+            $stmt->execute([$nuevo_user, $pass_hash, $nuevo_email]);
+            registrar_log("TRIGGER ➜ USER_CREATED por admin: '$nuevo_user'", 'success');
+            $msg = "<p class='msg-success'>Usuario creado con éxito.</p>";
+        } catch (Exception $e) {
+            registrar_log("ADMIN TRIGGER FAIL ➜ usuario duplicado", 'fail');
+            $msg = "<p class='error'>Error: El nombre de usuario o correo ya existe.</p>";
+        }
     }
 }
 
