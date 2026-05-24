@@ -27,7 +27,7 @@ body {
 .log-sidebar {
     width: 380px;
     background-color: #050505;
-    border-left: 2px solid #ff003c; /* Cambiado a Rojo Neon */
+    border-left: 2px solid #ff003c;
     box-shadow: -5px 0 25px rgba(255, 0, 60, 0.15);
     padding: 20px;
     display: flex;
@@ -37,7 +37,7 @@ body {
 }
 
 .log-header {
-    color: #ff003c; /* Cambiado a Rojo Neon */
+    color: #ff003c;
     border-bottom: 1px solid #222;
     padding-bottom: 10px;
     margin-bottom: 15px;
@@ -53,7 +53,7 @@ body {
 
 .log-time { color: #555; margin-right: 5px; }
 .log-info { color: #cbd5e1; }
-.log-success { color: #ff003c; text-shadow: 0 0 4px #ff003c; } /* Cambiado a Rojo Neon */
+.log-success { color: #ff003c; text-shadow: 0 0 4px #ff003c; }
 .log-fail { color: #ffffff; text-shadow: 0 0 4px #fff; }
 
 /* --- TÍTULOS EN ROJO NEÓN --- */
@@ -69,7 +69,7 @@ body {
 
 .box-container {
     background: #0a0a0a;
-    border: 2px solid #ff003c; /* Cambiado a Rojo Neon */
+    border: 2px solid #ff003c;
     box-shadow: 0 0 20px rgba(255, 0, 60, 0.3);
     padding: 30px;
     border-radius: 4px;
@@ -81,7 +81,7 @@ body {
 
 /* Indicador dinámico Flecha Parpadeante */
 .pointer {
-    color: #ff003c; /* Cambiado a Rojo Neon */
+    color: #ff003c;
     margin-right: 10px;
     display: inline-block;
     animation: pulse 0.8s infinite alternate;
@@ -113,11 +113,10 @@ body {
     margin: 0;
 }
 .tab-btn.active {
-    color: #ff003c; /* Cambiado a Rojo Neon */
+    color: #ff003c;
     border-bottom: 2px solid #ff003c;
     text-shadow: 0 0 5px rgba(255, 0, 60, 0.5);
 }
-/* Efecto Blanco al pasar el mouse por las pestañas */
 .tab-btn:hover:not(.active) {
     color: #ffffff;
     text-shadow: 0 0 8px #ffffff;
@@ -163,7 +162,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 button, input[type="submit"] {
     width: 100%;
     padding: 14px;
-    background: #ff003c; /* Cambiado a Rojo Neon */
+    background: #ff003c;
     border: none;
     color: #000;
     font-weight: bold;
@@ -186,7 +185,7 @@ button:hover, input[type="submit"]:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #ff003c; /* Cambiado a Rojo Neon */
+    border-bottom: 2px solid #ff003c;
     padding-bottom: 15px;
     margin-bottom: 25px;
 }
@@ -201,18 +200,31 @@ button:hover, input[type="submit"]:hover {
 }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 12px; text-align: left; border-bottom: 1px solid #222; }
-th { color: #ff003c; text-transform: uppercase; } /* Cambiado a Rojo Neon */
+th { color: #ff003c; text-transform: uppercase; }
 
-/* Enlaces de acciones con hover blanco */
-.table-box table tbody tr td a {
-    transition: all 0.2s ease;
+/* --- BOTONES CRUD DE LA TABLA --- */
+.btn-editar, .btn-eliminar {
+    display: inline-block;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
 }
-.table-box table tbody tr td a:hover {
+
+.btn-editar:hover {
     color: #ffffff !important;
-    text-shadow: 0 0 5px #ffffff !important;
+    text-shadow: 0 0 10px #ffffff, 0 0 20px rgba(255, 255, 255, 0.8) !important;
+    transform: translateY(-2px);
 }
 
-/* Personalización temática para la alerta SweetAlert2 */
+.btn-eliminar:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px #ffffff, 0 0 25px rgba(255, 255, 255, 1) !important;
+    transform: translateY(-2px);
+}
+
+.btn-editar:active, .btn-eliminar:active {
+    transform: scale(0.95) translateY(0px);
+}
+
+/* Estilos de la alerta SweetAlert2 */
 .swal2-popup.dark-swal {
     background: #0a0a0a !important;
     border: 2px solid #ff003c !important;

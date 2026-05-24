@@ -1,6 +1,6 @@
 <?php
 include 'conexion.php';
-include_once 'logs.php'; // Carga inicial segura de funciones
+include_once 'logs.php'; 
 
 $error = "";
 $success = "";

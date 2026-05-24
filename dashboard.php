@@ -89,8 +89,8 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
                             <td><?php echo htmlspecialchars($row['usuario']); ?></td>
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
                             <td>
-                                <a href="editar.php?id=<?php echo $row['id']; ?>" style="color: #ff003c; text-decoration: none; margin-right: 15px;">Editar</a>
-                                <a href="#" onclick="confirmarEliminar(event, <?php echo $row['id']; ?>)" style="color: #ffffff; text-shadow: 0 0 3px #fff; text-decoration: none;">Eliminar</a>
+                                <a href="editar.php?id=<?php echo $row['id']; ?>" class="btn-editar" style="color: #ff003c; text-decoration: none; margin-right: 15px;">Editar</a>
+                                <a href="#" class="btn-eliminar" onclick="confirmarEliminar(event, <?php echo $row['id']; ?>)" style="color: #ffffff; text-shadow: 0 0 3px #fff; text-decoration: none;">Eliminar</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -105,9 +105,9 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
 
 <script>
 function confirmarEliminar(event, id) {
-    event.preventDefault(); // Evita que la página salte al hacer clic
+    event.preventDefault(); 
     
-    SweetAlert2.fire({
+    Swal.fire({
         title: '¿ELIMINAR REGISTRO?',
         text: "Esta acción destruirá el ID #" + id + " en la base de datos.",
         icon: 'warning',
@@ -123,7 +123,6 @@ function confirmarEliminar(event, id) {
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            // Si el usuario acepta, se redirige de manera nativa para ejecutar el código PHP
             window.location.href = 'dashboard.php?eliminar=' + id;
         }
     });
