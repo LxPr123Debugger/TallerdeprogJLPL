@@ -3,7 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 include 'conexion.php';
-include_once 'logs.php'; // Cambiado a include_once para evitar el Fatal Error
+include_once 'logs.php'; 
 
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
@@ -17,7 +17,6 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 
 $id = $_GET['id'];
 
-// Obtener los datos del usuario a modificar
 $stmt = $conn->prepare("SELECT usuario, email FROM usuarios WHERE id = ?");
 $stmt->execute([$id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -27,7 +26,6 @@ if (!$user) {
     exit();
 }
 
-// Procesar la actualización
 if (isset($_POST['actualizar'])) {
     $nuevo_user = $_POST['usuario'];
     $nuevo_email = $_POST['email'];
@@ -61,17 +59,17 @@ if (isset($_POST['actualizar'])) {
             <span class="pointer">▶</span>MODIFICAR ID #<?php echo htmlspecialchars($id); ?>
         </h3>
         <form method="POST" action="">
-            <label style="color: #00f2fe; display: block; margin-bottom: 3px; font-size: 12px; margin-top: 10px;">Usuario:</label>
+            <label style="color: #ff003c; display: block; margin-bottom: 3px; font-size: 12px; margin-top: 10px;">Usuario:</label>
             <input type="text" name="usuario" value="<?php echo htmlspecialchars($user['usuario']); ?>" required>
             
-            <label style="color: #00f2fe; display: block; margin-bottom: 3px; font-size: 12px; margin-top: 10px;">Correo electrónico:</label>
+            <label style="color: #ff003c; display: block; margin-bottom: 3px; font-size: 12px; margin-top: 10px;">Correo electrónico:</label>
             <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
             
             <label style="color: #ffffff; text-shadow: 0 0 3px #fff; display: block; margin-bottom: 3px; font-size: 12px; margin-top: 10px;">Nueva contraseña (opcional):</label>
             <input type="password" name="password" placeholder="Dejar vacío para mantener">
             
             <button type="submit" name="actualizar">ACTUALIZAR DATOS</button>
-            <a href="dashboard.php" style="display: block; text-align: center; color: #555; margin-top: 15px; text-decoration: none; font-size: 13px;">Volver al panel</a>
+            <a href="dashboard.php" style="display: block; text-align: center; color: #555; margin-top: 15px; text-decoration: none; font-size: 13px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#555'">Volver al panel</a>
         </form>
     </div>
 </div>
@@ -79,5 +77,4 @@ if (isset($_POST['actualizar'])) {
 <?php include_once 'logs.php'; ?>
 
 </body>
-</html>
 </html>

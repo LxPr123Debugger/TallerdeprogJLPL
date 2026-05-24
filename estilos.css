@@ -27,8 +27,8 @@ body {
 .log-sidebar {
     width: 380px;
     background-color: #050505;
-    border-left: 2px solid #00f2fe;
-    box-shadow: -5px 0 25px rgba(0, 242, 254, 0.15);
+    border-left: 2px solid #ff003c; /* Cambiado a Rojo Neon */
+    box-shadow: -5px 0 25px rgba(255, 0, 60, 0.15);
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -37,7 +37,7 @@ body {
 }
 
 .log-header {
-    color: #00f2fe;
+    color: #ff003c; /* Cambiado a Rojo Neon */
     border-bottom: 1px solid #222;
     padding-bottom: 10px;
     margin-bottom: 15px;
@@ -53,13 +53,13 @@ body {
 
 .log-time { color: #555; margin-right: 5px; }
 .log-info { color: #cbd5e1; }
-.log-success { color: #00f2fe; }
-.log-fail { color: #ff003c; text-shadow: 0 0 4px #ff003c; }
+.log-success { color: #ff003c; text-shadow: 0 0 4px #ff003c; } /* Cambiado a Rojo Neon */
+.log-fail { color: #ffffff; text-shadow: 0 0 4px #fff; }
 
 /* --- TÍTULOS EN ROJO NEÓN --- */
 .neon-title {
     font-size: 30px;
-    color: #ff003c; /* Cambiado a Rojo Neón */
+    color: #ff003c; 
     text-align: center;
     margin-bottom: 25px;
     text-transform: uppercase;
@@ -69,8 +69,8 @@ body {
 
 .box-container {
     background: #0a0a0a;
-    border: 2px solid #00f2fe;
-    box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+    border: 2px solid #ff003c; /* Cambiado a Rojo Neon */
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.3);
     padding: 30px;
     border-radius: 4px;
     width: 380px;
@@ -81,15 +81,15 @@ body {
 
 /* Indicador dinámico Flecha Parpadeante */
 .pointer {
-    color: #00f2fe;
+    color: #ff003c; /* Cambiado a Rojo Neon */
     margin-right: 10px;
     display: inline-block;
     animation: pulse 0.8s infinite alternate;
 }
 
 @keyframes pulse {
-    0% { opacity: 0.2; transform: scale(0.95); text-shadow: 0 0 0 rgba(0,242,254,0); }
-    100% { opacity: 1; transform: scale(1.05); text-shadow: 0 0 8px #00f2fe; }
+    0% { opacity: 0.2; transform: scale(0.95); text-shadow: 0 0 0 rgba(255,0,60,0); }
+    100% { opacity: 1; transform: scale(1.05); text-shadow: 0 0 8px #ff003c; }
 }
 
 /* Control de Pestañas (Tabs) */
@@ -113,17 +113,17 @@ body {
     margin: 0;
 }
 .tab-btn.active {
-    color: #00f2fe;
-    border-bottom: 2px solid #00f2fe;
-    text-shadow: 0 0 5px rgba(0, 242, 254, 0.5);
+    color: #ff003c; /* Cambiado a Rojo Neon */
+    border-bottom: 2px solid #ff003c;
+    text-shadow: 0 0 5px rgba(255, 0, 60, 0.5);
 }
-/* Efecto Blanco al pasar el mouse por las pestañas inactivas */
+/* Efecto Blanco al pasar el mouse por las pestañas */
 .tab-btn:hover:not(.active) {
     color: #ffffff;
     text-shadow: 0 0 8px #ffffff;
 }
 
-/* --- Contenedor de Animación Deslizable --- */
+/* Contenedor de Animación Deslizable */
 .forms-wrapper {
     display: flex;
     width: 200%;
@@ -163,7 +163,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 button, input[type="submit"] {
     width: 100%;
     padding: 14px;
-    background: #00f2fe;
+    background: #ff003c; /* Cambiado a Rojo Neon */
     border: none;
     color: #000;
     font-weight: bold;
@@ -186,7 +186,7 @@ button:hover, input[type="submit"]:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #00f2fe;
+    border-bottom: 2px solid #ff003c; /* Cambiado a Rojo Neon */
     padding-bottom: 15px;
     margin-bottom: 25px;
 }
@@ -197,11 +197,11 @@ button:hover, input[type="submit"]:hover {
     padding: 20px;
     border-radius: 4px;
     flex: 2;
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.05);
+    box-shadow: 0 0 15px rgba(255, 0, 60, 0.05);
 }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 12px; text-align: left; border-bottom: 1px solid #222; }
-th { color: #00f2fe; text-transform: uppercase; }
+th { color: #ff003c; text-transform: uppercase; } /* Cambiado a Rojo Neon */
 
 /* Enlaces de acciones con hover blanco */
 .table-box table tbody tr td a {
@@ -212,5 +212,15 @@ th { color: #00f2fe; text-transform: uppercase; }
     text-shadow: 0 0 5px #ffffff !important;
 }
 
+/* Personalización temática para la alerta SweetAlert2 */
+.swal2-popup.dark-swal {
+    background: #0a0a0a !important;
+    border: 2px solid #ff003c !important;
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.4) !important;
+    font-family: 'Fira Code', monospace !important;
+}
+.swal2-title.dark-swal-title { color: #fff !important; }
+.swal2-html-container.dark-swal-text { color: #cbd5e1 !important; }
+
 .error { color: #ff003c; font-size: 14px; text-align: center; margin-bottom: 15px; text-shadow: 0 0 5px #ff003c; }
-.msg-success { color: #00f2fe; font-size: 14px; text-align: center; margin-bottom: 15px; text-shadow: 0 0 5px #00f2fe; }
+.msg-success { color: #ff003c; font-size: 14px; text-align: center; margin-bottom: 15px; text-shadow: 0 0 5px #ff003c; }

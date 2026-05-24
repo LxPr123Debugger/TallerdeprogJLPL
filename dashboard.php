@@ -44,6 +44,7 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
     <meta charset="UTF-8">
     <title>Panel de Control</title>
     <link rel="stylesheet" href="estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -52,8 +53,8 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
         <div class="header-panel">
             <div class="neon-title" style="font-size: 24px; margin: 0;"><span class="pointer">▶</span>PANEL CONTROL</div>
             <div>
-                <span>Bienvenido, <strong style="color: #00f2fe;"><?php echo htmlspecialchars($_SESSION['usuario']); ?></strong></span> | 
-                <a href="logout.php" style="color: #ffffff; text-shadow: 0 0 5px #fff; text-decoration: none; font-weight: bold; transition: all 0.2s;" onmouseover="this.style.color='#ff003c'" onmouseout="this.style.color='#ffffff'">Cerrar Sesión</a>
+                <span>Bienvenido, <strong style="color: #ff003c;"><?php echo htmlspecialchars($_SESSION['usuario']); ?></strong></span> | 
+                <a href="logout.php" style="color: #ffffff; text-shadow: 0 0 5px #fff; text-decoration: none; font-weight: bold; transition: all 0.2s;" onmouseover="this.style.color='#ff003c'; this.style.textShadow='0 0 8px #ff003c'" onmouseout="this.style.color='#ffffff'; this.style.textShadow='0 0 5px #fff'">Cerrar Sesión</a>
             </div>
         </div>
 
@@ -71,7 +72,7 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
             </div>
 
             <div class="table-box">
-                <h3 style="color: #00f2fe; font-size: 16px; margin-top:0;">USUARIOS EN LA BASE DE DATOS</h3>
+                <h3 style="color: #ff003c; text-shadow: 0 0 5px rgba(255,0,60,0.4); font-size: 16px; margin-top:0;">USUARIOS EN LA BASE DE DATOS</h3>
                 <table>
                     <thead>
                         <tr>
@@ -88,8 +89,8 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
                             <td><?php echo htmlspecialchars($row['usuario']); ?></td>
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
                             <td>
-                                <a href="editar.php?id=<?php echo $row['id']; ?>" style="color: #00f2fe; text-decoration: none; margin-right: 15px;">Editar</a>
-                                <a href="dashboard.php?eliminar=<?php echo $row['id']; ?>" onclick="return confirm('¿Eliminar registro?');" style="color: #ffffff; text-shadow: 0 0 3px #fff; text-decoration: none;">Eliminar</a>
+                                <a href="editar.php?id=<?php echo $row['id']; ?>" style="color: #ff003c; text-decoration: none; margin-right: 15px;">Editar</a>
+                                <a href="#" onclick="confirmarEliminar(event, <?php echo $row['id']; ?>)" style="color: #ffffff; text-shadow: 0 0 3px #fff; text-decoration: none;">Eliminar</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -101,6 +102,33 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
 </div>
 
 <?php include_once 'logs.php'; ?>
+
+<script>
+function confirmarEliminar(event, id) {
+    event.preventDefault(); // Evita que la página salte al hacer clic
+    
+    SweetAlert2.fire({
+        title: '¿ELIMINAR REGISTRO?',
+        text: "Esta acción destruirá el ID #" + id + " en la base de datos.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ff003c',
+        cancelButtonColor: '#222',
+        confirmButtonText: 'SÍ, BORRAR',
+        cancelButtonText: 'CANCELAR',
+        customClass: {
+            popup: 'dark-swal',
+            title: 'dark-swal-title',
+            htmlContainer: 'dark-swal-text'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el usuario acepta, se redirige de manera nativa para ejecutar el código PHP
+            window.location.href = 'dashboard.php?eliminar=' + id;
+        }
+    });
+}
+</script>
 
 </body>
 </html>
