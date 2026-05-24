@@ -3,7 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 include 'conexion.php';
-include_once 'logs.php'; // Cambiado a include_once para evitar el Fatal Error
+include_once 'logs.php'; 
 
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
@@ -36,7 +36,6 @@ if (isset($_GET['eliminar'])) {
     exit();
 }
 
-// Adaptado a la consulta correcta de tu base de datos
 $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -54,7 +53,7 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
             <div class="neon-title" style="font-size: 24px; margin: 0;"><span class="pointer">▶</span>PANEL CONTROL</div>
             <div>
                 <span>Bienvenido, <strong style="color: #00f2fe;"><?php echo htmlspecialchars($_SESSION['usuario']); ?></strong></span> | 
-                <a href="logout.php" style="color: #ffffff; text-shadow: 0 0 5px #fff; text-decoration: none; font-weight: bold;">Cerrar Sesión</a>
+                <a href="logout.php" style="color: #ffffff; text-shadow: 0 0 5px #fff; text-decoration: none; font-weight: bold; transition: all 0.2s;" onmouseover="this.style.color='#ff003c'" onmouseout="this.style.color='#ffffff'">Cerrar Sesión</a>
             </div>
         </div>
 

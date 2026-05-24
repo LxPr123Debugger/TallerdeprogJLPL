@@ -1,13 +1,12 @@
 <?php
 include 'conexion.php';
-include_once 'logs.php'; // Usamos include_once para evitar colisiones críticas
+include_once 'logs.php'; // Carga inicial segura de funciones
 
 $error = "";
 $success = "";
 $active_view = "login"; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // ---- LÓGICA DE INICIO DE SESIÓN ----
     if (isset($_POST['action_login'])) {
         $usuario = $_POST['usuario'];
         $password = $_POST['password'];
@@ -32,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // ---- LÓGICA DE REGISTRO ----
     if (isset($_POST['action_register'])) {
         $active_view = "register"; 
         $usuario = $_POST['reg_usuario'];

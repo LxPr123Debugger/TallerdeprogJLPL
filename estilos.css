@@ -54,17 +54,17 @@ body {
 .log-time { color: #555; margin-right: 5px; }
 .log-info { color: #cbd5e1; }
 .log-success { color: #00f2fe; }
-.log-fail { color: #ffffff; text-shadow: 0 0 4px #ffffff; }
+.log-fail { color: #ff003c; text-shadow: 0 0 4px #ff003c; }
 
-/* --- Componentes del Formulario Animado --- */
+/* --- TÍTULOS EN ROJO NEÓN --- */
 .neon-title {
     font-size: 30px;
-    color: #ffffff;
+    color: #ff003c; /* Cambiado a Rojo Neón */
     text-align: center;
     margin-bottom: 25px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 0 0 5px #ffffff, 0 0 15px rgba(255, 255, 255, 0.6);
+    text-shadow: 0 0 5px #ff003c, 0 0 15px rgba(255, 0, 60, 0.6);
 }
 
 .box-container {
@@ -79,7 +79,7 @@ body {
     min-height: 340px;
 }
 
-/* Indicador dinámico Flecha Verde/Azul Parpadeante */
+/* Indicador dinámico Flecha Parpadeante */
 .pointer {
     color: #00f2fe;
     margin-right: 10px;
@@ -109,7 +109,7 @@ body {
     font-size: 14px;
     cursor: pointer;
     text-transform: uppercase;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
     margin: 0;
 }
 .tab-btn.active {
@@ -117,11 +117,16 @@ body {
     border-bottom: 2px solid #00f2fe;
     text-shadow: 0 0 5px rgba(0, 242, 254, 0.5);
 }
+/* Efecto Blanco al pasar el mouse por las pestañas inactivas */
+.tab-btn:hover:not(.active) {
+    color: #ffffff;
+    text-shadow: 0 0 8px #ffffff;
+}
 
 /* --- Contenedor de Animación Deslizable --- */
 .forms-wrapper {
     display: flex;
-    width: 200%; /* Espacio para dos formularios de lado a lado */
+    width: 200%;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
@@ -130,12 +135,11 @@ body {
     transition: opacity 0.3s ease;
 }
 
-/* Estado inactivo se desvanece un poco */
 .forms-wrapper.show-register {
     transform: translateX(-50%);
 }
 
-/* Inputs */
+/* Inputs con Efecto Blanco en Focus */
 input[type="text"], input[type="password"], input[type="email"] {
     width: 100%;
     padding: 12px;
@@ -147,12 +151,15 @@ input[type="text"], input[type="password"], input[type="email"] {
     box-sizing: border-box;
     outline: none;
     font-family: inherit;
+    transition: all 0.2s ease;
 }
 input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
     border-color: #ffffff;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
+/* Botones con Efecto de Cambio a Blanco Puro */
 button, input[type="submit"] {
     width: 100%;
     padding: 14px;
@@ -196,5 +203,14 @@ table { width: 100%; border-collapse: collapse; }
 th, td { padding: 12px; text-align: left; border-bottom: 1px solid #222; }
 th { color: #00f2fe; text-transform: uppercase; }
 
-.error { color: #ffffff; font-size: 14px; text-align: center; margin-bottom: 15px; text-shadow: 0 0 5px #ffffff; }
+/* Enlaces de acciones con hover blanco */
+.table-box table tbody tr td a {
+    transition: all 0.2s ease;
+}
+.table-box table tbody tr td a:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 5px #ffffff !important;
+}
+
+.error { color: #ff003c; font-size: 14px; text-align: center; margin-bottom: 15px; text-shadow: 0 0 5px #ff003c; }
 .msg-success { color: #00f2fe; font-size: 14px; text-align: center; margin-bottom: 15px; text-shadow: 0 0 5px #00f2fe; }
