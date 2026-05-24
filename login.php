@@ -1,13 +1,13 @@
 <?php
 include 'conexion.php';
-include 'logs.php';
+include_once 'logs.php'; // Usamos include_once para evitar colisiones críticas
 
 $error = "";
 $success = "";
-$active_view = "login"; // Controla qué panel se muestra por defecto al cargar
+$active_view = "login"; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // ---- PROCESAR LOGICA DE INICIO DE SESIÓN ----
+    // ---- LÓGICA DE INICIO DE SESIÓN ----
     if (isset($_POST['action_login'])) {
         $usuario = $_POST['usuario'];
         $password = $_POST['password'];
@@ -32,9 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // ---- PROCESAR LOGICA DE REGISTRO ----
+    // ---- LÓGICA DE REGISTRO ----
     if (isset($_POST['action_register'])) {
-        $active_view = "register"; // Si falla o se crea, mantiene la pestaña de registro abierta
+        $active_view = "register"; 
         $usuario = $_POST['reg_usuario'];
         $email = $_POST['reg_email'];
         $password = $_POST['reg_password'];
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 registrar_log("REGISTER OK ➜ usuario: '$usuario' | email: '$email'", 'success');
                 $success = "Cuenta creada. ¡Inicia sesión!";
-                $active_view = "login"; // Regresa al login tras crear la cuenta con éxito
+                $active_view = "login"; 
             } catch (Exception $e) {
                 registrar_log("REGISTER FAIL ➜ campos duplicados", 'fail');
                 $error = "El usuario o correo ya existe.";
@@ -107,10 +107,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<?php include 'logs.php'; ?>
+<?php include_once 'logs.php'; ?>
 
 <script>
-// Función JavaScript para manejar la animación fluida en el cliente
 function switchTab(type) {
     const wrapper = document.getElementById('wrapper');
     const btnLogin = document.getElementById('btn-login');

@@ -1,7 +1,9 @@
 <?php
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 include 'conexion.php';
-include 'logs.php';
+include_once 'logs.php'; // Cambiado a include_once para evitar el Fatal Error
 
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
@@ -34,6 +36,7 @@ if (isset($_GET['eliminar'])) {
     exit();
 }
 
+// Adaptado a la consulta correcta de tu base de datos
 $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -98,7 +101,7 @@ $resultado_usuarios = $conn->query("SELECT id, usuario, email FROM usuarios")->f
     </div>
 </div>
 
-<?php include 'logs.php'; ?>
+<?php include_once 'logs.php'; ?>
 
 </body>
 </html>

@@ -1,7 +1,9 @@
 <?php
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 include 'conexion.php';
-include 'logs.php';
+include_once 'logs.php'; // Cambiado a include_once para evitar el Fatal Error
 
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
@@ -15,6 +17,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 
 $id = $_GET['id'];
 
+// Obtener los datos del usuario a modificar
 $stmt = $conn->prepare("SELECT usuario, email FROM usuarios WHERE id = ?");
 $stmt->execute([$id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -24,6 +27,7 @@ if (!$user) {
     exit();
 }
 
+// Procesar la actualización
 if (isset($_POST['actualizar'])) {
     $nuevo_user = $_POST['usuario'];
     $nuevo_email = $_POST['email'];
@@ -67,12 +71,13 @@ if (isset($_POST['actualizar'])) {
             <input type="password" name="password" placeholder="Dejar vacío para mantener">
             
             <button type="submit" name="actualizar">ACTUALIZAR DATOS</button>
-            <a href="dashboard.php" style="display: block; text-align: center; color: #64748b; margin-top: 15px; text-decoration: none; font-size: 13px;">Volver al panel</a>
+            <a href="dashboard.php" style="display: block; text-align: center; color: #555; margin-top: 15px; text-decoration: none; font-size: 13px;">Volver al panel</a>
         </form>
     </div>
 </div>
 
-<?php include 'logs.php'; ?>
+<?php include_once 'logs.php'; ?>
 
 </body>
+</html>
 </html>

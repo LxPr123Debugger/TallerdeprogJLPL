@@ -10,16 +10,18 @@ if (!isset($_SESSION['system_logs'])) {
     ];
 }
 
-// Función global para registrar eventos en la sesión
-function registrar_log($texto, $tipo = 'info') {
-    if (!isset($_SESSION['system_logs'])) {
-        $_SESSION['system_logs'] = [];
+// DECLARACIÓN SEGURA: Solo se crea la función si no existe previamente
+if (!function_exists('registrar_log')) {
+    function registrar_log($texto, $tipo = 'info') {
+        if (!isset($_SESSION['system_logs'])) {
+            $_SESSION['system_logs'] = [];
+        }
+        array_unshift($_SESSION['system_logs'], [
+            'time' => date('H:i:s'),
+            'type' => $tipo,
+            'text' => $texto
+        ]);
     }
-    array_unshift($_SESSION['system_logs'], [
-        'time' => date('H:i:s'),
-        'type' => $tipo,
-        'text' => $texto
-    ]);
 }
 ?>
 <div class="log-sidebar">
