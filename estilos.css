@@ -1,159 +1,200 @@
-@import url('https://fonts.googleapis.com/css?family=Warnes');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap');
 
 body {
     background-color: #000000;
-    font-family: sans-serif;
-    color: #fff;
+    font-family: 'Fira Code', monospace;
+    color: #e2e8f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Contenedor Principal Izquierdo */
+.app-container {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
+    padding: 40px;
+    position: relative;
+}
+
+/* --- Panel Lateral de Logs (Derecha) --- */
+.log-sidebar {
+    width: 380px;
+    background-color: #050505;
+    border-left: 2px solid #00f2fe;
+    box-shadow: -5px 0 25px rgba(0, 242, 254, 0.15);
     padding: 20px;
-    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    overflow-y: auto;
 }
 
+.log-header {
+    color: #00f2fe;
+    border-bottom: 1px solid #222;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.log-entry {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.log-time { color: #555; margin-right: 5px; }
+.log-info { color: #cbd5e1; }
+.log-success { color: #00f2fe; }
+.log-fail { color: #ffffff; text-shadow: 0 0 4px #ffffff; }
+
+/* --- Componentes del Formulario Animado --- */
 .neon-title {
-    display: inline-block;
-    padding: 10px;
-    border: none;
-    font: normal 44px/normal "Warnes", Helvetica, sans-serif;
-    color: rgba(255,255,255,1);
+    font-size: 30px;
+    color: #ffffff;
     text-align: center;
-    white-space: pre-line;
-    text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #ff00de , 0 0 70px #ff00de , 0 0 80px #ff00de , 0 0 100px #ff00de ;
-    transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
-    margin-bottom: 20px;
-}
-
-.neon-title:hover {
-    text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #00ffff , 0 0 70px #00ffff , 0 0 80px #00ffff , 0 0 100px #00ffff ;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px #ffffff, 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
 .box-container {
-    background: #111111;
-    border: 2px solid #ff00de;
-    box-shadow: 0 0 15px #ff00de;
+    background: #0a0a0a;
+    border: 2px solid #00f2fe;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
     padding: 30px;
-    border-radius: 8px;
-    width: 320px;
-    transition: box-shadow 0.3s ease;
+    border-radius: 4px;
+    width: 380px;
+    position: relative;
+    overflow: hidden;
+    min-height: 340px;
 }
 
-.box-container:hover {
-    box-shadow: 0 0 25px #00ffff;
-    border-color: #00ffff;
+/* Indicador dinámico Flecha Verde/Azul Parpadeante */
+.pointer {
+    color: #00f2fe;
+    margin-right: 10px;
+    display: inline-block;
+    animation: pulse 0.8s infinite alternate;
 }
 
-h2, h3 {
+@keyframes pulse {
+    0% { opacity: 0.2; transform: scale(0.95); text-shadow: 0 0 0 rgba(0,242,254,0); }
+    100% { opacity: 1; transform: scale(1.05); text-shadow: 0 0 8px #00f2fe; }
+}
+
+/* Control de Pestañas (Tabs) */
+.tabs {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #222;
+}
+.tab-btn {
+    flex: 1;
     text-align: center;
-    color: #fff;
-    margin-top: 0;
+    padding: 10px;
+    color: #444;
+    background: none;
+    border: none;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    transition: color 0.3s ease;
+    margin: 0;
+}
+.tab-btn.active {
+    color: #00f2fe;
+    border-bottom: 2px solid #00f2fe;
+    text-shadow: 0 0 5px rgba(0, 242, 254, 0.5);
 }
 
+/* --- Contenedor de Animación Deslizable --- */
+.forms-wrapper {
+    display: flex;
+    width: 200%; /* Espacio para dos formularios de lado a lado */
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.form-block {
+    width: 50%;
+    transition: opacity 0.3s ease;
+}
+
+/* Estado inactivo se desvanece un poco */
+.forms-wrapper.show-register {
+    transform: translateX(-50%);
+}
+
+/* Inputs */
 input[type="text"], input[type="password"], input[type="email"] {
     width: 100%;
     padding: 12px;
-    margin: 12px 0;
-    background: #222;
-    border: 1px solid #ff00de;
+    margin: 8px 0;
+    background: #111;
+    border: 1px solid #333;
     color: #fff;
     border-radius: 4px;
     box-sizing: border-box;
     outline: none;
+    font-family: inherit;
 }
-
 input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
-    border-color: #00ffff;
-    box-shadow: 0 0 8px #00ffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
 }
 
 button, input[type="submit"] {
     width: 100%;
-    padding: 12px;
-    background: transparent;
-    border: 2px solid #ff00de;
-    color: white;
+    padding: 14px;
+    background: #00f2fe;
+    border: none;
+    color: #000;
     font-weight: bold;
     text-transform: uppercase;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
-    letter-spacing: 1px;
+    margin-top: 15px;
+    font-family: inherit;
     transition: all 0.2s ease;
-    box-shadow: 0 0 5px #ff00de;
 }
-
 button:hover, input[type="submit"]:hover {
-    background: #00ffff;
+    background: #ffffff;
     color: #000;
-    border-color: #00ffff;
-    box-shadow: 0 0 15px #00ffff;
+    box-shadow: 0 0 15px #ffffff;
 }
 
-.error { color: #ff4d4d; text-align: center; margin-bottom: 10px; }
-.msg-success { color: #00ffff; text-align: center; }
-
-.dashboard-layout {
-    display: flex;
-    flex-direction: column;
-    width: 90%;
-    max-width: 1200px;
-    gap: 20px;
-}
-
+/* Dashboard UI */
+.dashboard-layout { width: 100%; max-width: 1000px; }
 .header-panel {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    padding: 15px 0;
-    border-bottom: 2px solid #ff00de;
+    border-bottom: 2px solid #00f2fe;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
 }
-
-.header-panel a { color: #ff4d4d; text-decoration: none; font-weight: bold; }
-.header-panel a:hover { text-shadow: 0 0 8px #ff4d4d; }
-
-.main-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    width: 100%;
-}
-
+.main-content { display: flex; gap: 30px; width: 100%; }
 .table-box {
-    background: #111111;
-    border: 2px solid #ff00de;
+    background: #0a0a0a;
+    border: 2px solid #222;
     padding: 20px;
-    border-radius: 8px;
-    flex-grow: 1;
-    overflow-x: auto;
+    border-radius: 4px;
+    flex: 2;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.05);
 }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid #222; }
+th { color: #00f2fe; text-transform: uppercase; }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #333;
-}
-
-th {
-    color: #00ffff;
-    border-bottom: 2px solid #00ffff;
-    text-transform: uppercase;
-    font-size: 14px;
-}
-
-td { color: #ddd; }
-
-.btn-edit { color: #ffc107; text-decoration: none; font-weight: bold; margin-right: 15px; }
-.btn-delete { color: #ff4d4d; text-decoration: none; font-weight: bold; }
-.btn-edit:hover, .btn-delete:hover { text-shadow: 0 0 8px currentColor; }
+.error { color: #ffffff; font-size: 14px; text-align: center; margin-bottom: 15px; text-shadow: 0 0 5px #ffffff; }
+.msg-success { color: #00f2fe; font-size: 14px; text-align: center; margin-bottom: 15px; text-shadow: 0 0 5px #00f2fe; }
